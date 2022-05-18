@@ -1,4 +1,4 @@
-package com.javid.springlastprojectphase3;
+package com.javid.spring.last.project.phase3;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
