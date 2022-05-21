@@ -12,13 +12,13 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 /**
+ * @param <I> entity's id type
  * @author javid
  * Created on 4/30/2022
  */
 @NoArgsConstructor
 @Getter
 @Setter
-
 @MappedSuperclass
 public abstract class BaseEntity<I extends Serializable> {
 
