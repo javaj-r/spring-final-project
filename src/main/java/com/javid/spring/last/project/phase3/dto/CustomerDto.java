@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Digits;
+import java.math.BigDecimal;
 
 /**
  * @author javid
@@ -17,5 +18,5 @@ import javax.validation.constraints.Digits;
 public class CustomerDto extends UserDto {
 
     @Digits(integer = 15, fraction = 2)
-    private Long credit;
+    private BigDecimal credit;
 }
