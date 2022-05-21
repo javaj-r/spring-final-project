@@ -42,6 +42,7 @@ public class ExpertOffer extends BaseEntity<ExpertOfferId> {
     @ManyToOne
     @JoinColumn(name = "CUSTOMER_ORDER_ID", updatable = false, insertable = false)
     private CustomerOrder order;
+
     @Digits(integer = 15, fraction = 2)
     @DecimalMin(value = "0.0", message = NEGATIVE_PRICE)
     @Column(name = "EXPERT_OFFERED_PRICE")
