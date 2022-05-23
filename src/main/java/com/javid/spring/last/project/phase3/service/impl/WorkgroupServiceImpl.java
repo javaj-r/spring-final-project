@@ -1,8 +1,8 @@
 package com.javid.spring.last.project.phase3.service.impl;
 
-import com.javid.spring.last.project.phase3.dto.WorkDto;
-import com.javid.spring.last.project.phase3.mapper.WorkMapper;
-import com.javid.spring.last.project.phase3.repository.WorkRepository;
+import com.javid.spring.last.project.phase3.dto.WorkgroupDto;
+import com.javid.spring.last.project.phase3.mapper.WorkgroupMapper;
+import com.javid.spring.last.project.phase3.repository.WorkgroupRepository;
 import com.javid.spring.last.project.phase3.service.WorkgroupService;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +15,16 @@ import java.util.List;
 @Service
 public class WorkgroupServiceImpl implements WorkgroupService {
 
-    private final WorkRepository workRepository;
-    private final WorkMapper workMapper;
+    private final WorkgroupRepository workgroupRepository;
+    private final WorkgroupMapper workgroupMapper;
 
-    public WorkgroupServiceImpl(WorkRepository workRepository, WorkMapper workMapper) {
-        this.workRepository = workRepository;
-        this.workMapper = workMapper;
+    public WorkgroupServiceImpl(WorkgroupRepository workgroupRepository, WorkgroupMapper workgroupMapper) {
+        this.workgroupRepository = workgroupRepository;
+        this.workgroupMapper = workgroupMapper;
     }
 
     @Override
-    public List<WorkDto> findAll() {
-        return workMapper.mapToDto(workRepository.findAll());
+    public List<WorkgroupDto> findAll() {
+        return workgroupMapper.mapToDto(workgroupRepository.findAll());
     }
 }

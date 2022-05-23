@@ -1,6 +1,6 @@
 package com.javid.spring.last.project.phase3.service;
 
-import com.javid.spring.last.project.phase3.dto.WorkDto;
+import com.javid.spring.last.project.phase3.dto.WorkgroupDto;
 
 import java.util.List;
 
@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface WorkgroupService {
 
-    List<WorkDto> findAll();
+    List<WorkgroupDto> findAll();
 }
