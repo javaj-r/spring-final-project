@@ -1,5 +1,6 @@
 package com.javid.spring.last.project.phase3.mapper.base;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -17,4 +18,8 @@ public interface BaseMapper<E, D> {
     Set<E> mapToEntity(Set<D> set);
 
     Set<D> mapToDto(Set<E> set);
+
+    List<E> mapToEntity(List<D> list);
+
+    List<D> mapToDto(List<E> list);
 }
