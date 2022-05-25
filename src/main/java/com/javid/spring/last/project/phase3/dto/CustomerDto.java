@@ -1,6 +1,7 @@
 package com.javid.spring.last.project.phase3.dto;
 
 import com.javid.spring.last.project.phase3.dto.base.UserDto;
+import com.javid.spring.last.project.phase3.util.AdvanceInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,6 @@ import java.math.BigDecimal;
 @Data
 public class CustomerDto extends UserDto {
 
-    @Digits(integer = 15, fraction = 2)
+    @Digits(integer = 15, fraction = 2, groups = AdvanceInfo.class)
     private BigDecimal credit;
 }
