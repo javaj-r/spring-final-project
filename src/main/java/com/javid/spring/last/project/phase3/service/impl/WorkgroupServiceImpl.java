@@ -1,6 +1,7 @@
 package com.javid.spring.last.project.phase3.service.impl;
 
 import com.javid.spring.last.project.phase3.dto.WorkgroupDto;
+import com.javid.spring.last.project.phase3.exception.ResourceNotFoundException;
 import com.javid.spring.last.project.phase3.mapper.WorkgroupMapper;
 import com.javid.spring.last.project.phase3.repository.WorkgroupRepository;
 import com.javid.spring.last.project.phase3.service.WorkgroupService;
@@ -26,5 +27,12 @@ public class WorkgroupServiceImpl implements WorkgroupService {
     @Override
     public List<WorkgroupDto> findAll() {
         return workgroupMapper.mapToDto(workgroupRepository.findAll());
+    }
+
+    @Override
+    public WorkgroupDto findById(Long id) {
+        return workgroupRepository.findById(id)
+                .map(workgroupMapper::mapToDto)
+                .orElseThrow(() -> new ResourceNotFoundException("Workgroup not found!"));
     }
 }

@@ -11,4 +11,6 @@ import java.util.List;
 public interface WorkgroupService {
 
     List<WorkgroupDto> findAll();
+
+    WorkgroupDto findById(Long id);
 }
