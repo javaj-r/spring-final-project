@@ -2,17 +2,19 @@ package com.javid.spring.last.project.phase3.dto;
 
 import com.javid.spring.last.project.phase3.dto.base.UserDto;
 import com.javid.spring.last.project.phase3.model.enums.UserStatus;
+import com.javid.spring.last.project.phase3.util.AdvanceInfo;
+import com.javid.spring.last.project.phase3.util.ValidFile;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
-import static com.javid.spring.last.project.phase3.util.Validator.Message.IMAGE_MAX_KB;
+import static com.javid.spring.last.project.phase3.util.Validator.Message.IMAGE_SIZE_TYPE;
 import static com.javid.spring.last.project.phase3.util.Validator.Message.NULL_IMAGE;
 
 /**
@@ -25,12 +27,15 @@ import static com.javid.spring.last.project.phase3.util.Validator.Message.NULL_I
 @Accessors(chain = true)
 public class ExpertDto extends UserDto {
 
-    @NotNull(message = NULL_IMAGE)
-    @Size(max = 300 * 1024, message = IMAGE_MAX_KB)
     private Byte[] expertImage;
 
     private UserStatus expertStatus;
 
-    @Digits(integer = 15, fraction = 2)
+    @Digits(integer = 15, fraction = 2, groups = AdvanceInfo.class)
     private BigDecimal credit;
+
+    @NotNull(message = NULL_IMAGE)
+    @ValidFile(max = 300 * 1024, fileType = {"image/jpeg", "image/jpg"},
+            message = IMAGE_SIZE_TYPE, groups = AdvanceInfo.class)
+    private MultipartFile image;
 }
