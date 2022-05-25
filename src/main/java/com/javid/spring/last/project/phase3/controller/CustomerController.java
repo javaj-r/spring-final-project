@@ -39,7 +39,7 @@ public class CustomerController {
         return CUSTOMER_FORM;
     }
 
-    @PostMapping(value = "register"/*, consumes = MediaType.MULTIPART_FORM_DATA_VALUE*/)
+    @PostMapping(value = "register")
     public String register(@Validated(AdvanceInfo.class) @ModelAttribute(name = "customer") CustomerDto customer, BindingResult result) {
         if (result.hasErrors()) {
             result
