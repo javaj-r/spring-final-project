@@ -35,6 +35,9 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
      */
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
+        if (password == null)
+            return false;
+
         PasswordValidator validator = new PasswordValidator(List.of(
                 new LengthRule(8, 30),
                 new CharacterRule(EnglishCharacterData.UpperCase, 1),
