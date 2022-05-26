@@ -38,4 +38,8 @@ public class ExpertDto extends UserDto {
     @ValidFile(max = 300 * 1024, fileType = {"image/jpeg", "image/jpg"},
             message = IMAGE_SIZE_TYPE, groups = AdvanceInfo.class)
     private MultipartFile image;
+
+    private Double score;
+
+    private String enrolledWorkName;
 }
