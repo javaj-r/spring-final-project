@@ -17,7 +17,7 @@ public class ExpertSpecification extends UserSpecification<Expert> {
 
     @Override
     public Predicate toPredicate(Root<Expert> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-        if (criteria.getWorkName() == null)
+        if (criteria.getWorkName() == null || criteria.getWorkName().isBlank())
             return super.toPredicate(root, query, builder);
 
         var workName = criteria.getWorkName();
