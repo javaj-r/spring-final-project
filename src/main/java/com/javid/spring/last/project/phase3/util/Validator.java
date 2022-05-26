@@ -42,7 +42,7 @@ public class Validator {
         public static final String MIN = " cannot be les than {value}";
         public static final String MAX = " cannot be greater than {value}";
         public static final String MAX_KB = " cannot be larger than ${max / 1024}KB";
-        public static final String IMAGE_SIZE = " must be between ${min / 1024} and ${max / 1024}KB";
+        public static final String IMAGE_SIZE = " must size be between ${min / 1024} and ${max / 1024}KB";
         public static final String IMAGE_TYPE = " type must be .jpg or .jpeg";
 
         public static final String INVALID_EMAIL = "Invalid email address [${validatedValue}]";
@@ -72,6 +72,7 @@ public class Validator {
         public static final String SCORE_MIN = SCORE + MIN;
         public static final String SCORE_MAX = SCORE + MAX;
 
+        public static final String IMAGE_MAX_KB = IMAGE + MAX_KB;
         public static final String IMAGE_SIZE_TYPE = IMAGE + IMAGE_SIZE + IMAGE_TYPE;
         public static final String NULL_IMAGE = IMAGE + NOT_NULL;
 
