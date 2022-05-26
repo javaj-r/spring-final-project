@@ -1,0 +1,9 @@
+.form-control:focus {
+    outline: 0 none;
+    box-shadow: 0 0;
+}
+
+.form-select:focus {
+    outline: 0 none;
+    box-shadow: 0 0;
+}
