@@ -3,11 +3,18 @@ package com.javid.spring.last.project.phase3.service.impl;
 import com.javid.spring.last.project.phase3.dto.ExpertDto;
 import com.javid.spring.last.project.phase3.exception.ResourceNotFoundException;
 import com.javid.spring.last.project.phase3.mapper.ExpertMapper;
+import com.javid.spring.last.project.phase3.model.CustomerOrder;
 import com.javid.spring.last.project.phase3.repository.ExpertRepository;
+import com.javid.spring.last.project.phase3.repository.specification.ExpertSpecification;
+import com.javid.spring.last.project.phase3.repository.specification.SearchCriteria;
 import com.javid.spring.last.project.phase3.service.ExpertService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author javid
@@ -59,5 +66,37 @@ public class ExpertServiceImpl implements ExpertService {
     @Override
     public boolean existsByEmail(String email) {
         return expertRepository.existsByEmail(email);
+    }
+
+    @Override
+    public List<ExpertDto> findAllByCondition(ExpertDto expertDto) {
+        var firstname = expertDto.getFirstname() == null ? "" : expertDto.getFirstname();
+        var lastname = expertDto.getLastname() == null ? "" : expertDto.getLastname();
+        var email = expertDto.getEmail() == null ? "" : expertDto.getEmail();
+        var workName = expertDto.getEnrolledWorkName() == null ? "" : expertDto.getEnrolledWorkName();
+        var criteria = SearchCriteria.builder()
+                .firstname(firstname)
+                .lastname(lastname)
+                .email(email)
+                .workName(workName)
+                .build();
+        var spec = new ExpertSpecification(criteria);
+
+        return new HashSet<>(expertRepository.findAll(spec))
+                .parallelStream()
+                .map(expert -> {
+                            var score = expert
+                                    .getOrders()
+                                    .parallelStream()
+                                    .map(CustomerOrder::getWorkScore)
+                                    .mapToDouble(Byte::doubleValue)
+                                    .average()
+                                    .orElse(0.0);
+
+                            return expertMapper
+                                    .mapToDto(expert)
+                                    .setScore(score);
+                        }
+                ).collect(Collectors.toList());
     }
 }

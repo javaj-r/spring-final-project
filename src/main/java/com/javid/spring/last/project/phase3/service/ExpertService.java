@@ -2,6 +2,8 @@ package com.javid.spring.last.project.phase3.service;
 
 import com.javid.spring.last.project.phase3.dto.ExpertDto;
 
+import java.util.List;
+
 /**
  * @author javid
  * Created on 5/12/2022
@@ -17,4 +19,6 @@ public interface ExpertService {
     void deleteByID(Long id);
 
     boolean existsByEmail(String email);
+
+    List<ExpertDto> findAllByCondition(ExpertDto expertDto);
 }
