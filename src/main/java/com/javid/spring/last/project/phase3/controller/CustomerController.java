@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.util.ArrayList;
 
 /**
  * @author javid
@@ -33,14 +36,14 @@ public class CustomerController {
     }
 
     @GetMapping("register")
-    public String getRegisterPage(Model model) {
+    public String initCreationForm(Model model) {
         model.addAttribute("customer", new CustomerDto());
 
         return CUSTOMER_FORM;
     }
 
     @PostMapping(value = "register")
-    public String register(@Validated(AdvanceInfo.class) @ModelAttribute(name = "customer") CustomerDto customer, BindingResult result) {
+    public String processCreationForm(@Validated(AdvanceInfo.class) @ModelAttribute(name = "customer") CustomerDto customer, BindingResult result) {
         if (result.hasErrors()) {
             result
                     .getAllErrors()
@@ -58,4 +61,22 @@ public class CustomerController {
         return "redirect:/index";
     }
 
+    @GetMapping("search")
+    public String initSearchForm(Model model) {
+        model.addAttribute("customer", new CustomerDto());
+        model.addAttribute("customers", new ArrayList<CustomerDto>());
+
+        return "customer/search";
+    }
+
+    @PostMapping("search")
+    public ModelAndView processSearchForm(@ModelAttribute CustomerDto customer) {
+        var customers = customerService.findAllByNameAndEmail(customer);
+
+        var view = new ModelAndView("customer/search");
+        view.addObject("customer", customer);
+        view.addObject("customers", customers);
+
+        return view;
+    }
 }
