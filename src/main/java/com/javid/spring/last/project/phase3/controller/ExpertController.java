@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * @author javid
@@ -28,6 +30,7 @@ import java.io.IOException;
 @RequestMapping("expert")
 public class ExpertController {
 
+    public static final String EXPERT = "expert";
     public static final String EXPERT_FORM = "expert/form";
     private final ExpertService expertService;
     private final UserService userService;
@@ -39,23 +42,24 @@ public class ExpertController {
 
     @GetMapping("register")
     public String getRegisterPage(Model model) {
-        model.addAttribute("expert", new ExpertDto());
+        model.addAttribute(ExpertController.EXPERT, new ExpertDto());
 
         return EXPERT_FORM;
     }
 
     @PostMapping(value = "register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String register(@Validated(AdvanceInfo.class) @ModelAttribute(name = "expert") ExpertDto expert, BindingResult result) {
+    public String register(@Validated(AdvanceInfo.class) @ModelAttribute(name = EXPERT) ExpertDto expert, BindingResult result) {
         if (result.hasErrors()) {
-            result
-                    .getAllErrors()
+            result.getAllErrors()
                     .parallelStream()
                     .forEach(objectError -> log.debug(objectError.getDefaultMessage()));
+
             return EXPERT_FORM;
         }
         if (userService.existsByEmail(expert.getEmail())) {
             result.addError(new ObjectError("email", "Email already exists"));
             log.debug("Duplicate email: " + expert.getEmail());
+
             return EXPERT_FORM;
         }
         if (!expert.getImage().isEmpty()) {
@@ -68,6 +72,7 @@ public class ExpertController {
                 expert.setExpertImage(byteObjects);
             } catch (IOException e) {
                 log.error("Image converting error ", e);
+
                 return EXPERT_FORM;
             }
         }
@@ -75,6 +80,25 @@ public class ExpertController {
         expertService.saveOrUpdate(expert);
 
         return "redirect:/index";
+    }
+
+    @GetMapping("search")
+    public String initSearchForm(Model model) {
+        model.addAttribute(EXPERT, new ExpertDto());
+        model.addAttribute("experts", new ArrayList<ExpertDto>());
+
+        return "expert/search";
+    }
+
+    @PostMapping("search")
+    public ModelAndView processSearchForm(@ModelAttribute ExpertDto expert) {
+        var experts = expertService.findAllByCondition(expert);
+
+        var modelView = new ModelAndView("expert/search");
+        modelView.addObject(EXPERT, expert);
+        modelView.addObject("experts", experts);
+
+        return modelView;
     }
 
 
