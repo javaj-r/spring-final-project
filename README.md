@@ -1,2 +1,2 @@
-# spring-last-project-phase-3
-Maktab 69 Java Spring Course Last Project Phase 3
+# spring-final-project
+Maktab 69 Java Spring Course Final Project
