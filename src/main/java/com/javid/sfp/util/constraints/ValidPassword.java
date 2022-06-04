@@ -1,4 +1,6 @@
-package com.javid.sfp.util;
+package com.javid.sfp.util.constraints;
+
+import com.javid.sfp.util.validators.PasswordConstraintValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -24,5 +26,15 @@ public @interface ValidPassword {
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
+
+    /**
+     * @return size the element must be higher or equal to
+     */
+    int min() default 0;
+
+    /**
+     * @return size the element must be lower or equal to
+     */
+    int max() default Integer.MAX_VALUE;
 
 }

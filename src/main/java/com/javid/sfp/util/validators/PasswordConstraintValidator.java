@@ -1,5 +1,6 @@
-package com.javid.sfp.util;
+package com.javid.sfp.util.validators;
 
+import com.javid.sfp.util.constraints.ValidPassword;
 import org.passay.*;
 
 import javax.validation.ConstraintValidator;
@@ -12,15 +13,21 @@ import java.util.List;
  */
 public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {
 
+    private int max;
+    private int min;
+
     @Override
     public void initialize(ValidPassword constraintAnnotation) {
+        max = constraintAnnotation.max();
+        min = constraintAnnotation.min();
     }
 
     /**
      * <p>
-     * <strong>Roles:</strong>
+     * <strong>Rules:</strong>
      * <ol>
-     *     <li>at least 8 characters</li>
+     *     <li>minimum length equal to min</li>
+     *     <li>maximum length equal to max</li>
      *     <li>at least one upper-case character</li>
      *     <li>at least one lower-case character</li>
      *     <li>at least one digit character</li>
@@ -39,7 +46,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
             return false;
 
         PasswordValidator validator = new PasswordValidator(List.of(
-                new LengthRule(8, 30),
+                new LengthRule(min, max),
                 new CharacterRule(EnglishCharacterData.UpperCase, 1),
                 new CharacterRule(EnglishCharacterData.LowerCase, 1),
                 new CharacterRule(EnglishCharacterData.Digit, 1),
