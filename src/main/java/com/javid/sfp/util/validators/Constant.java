@@ -1,4 +1,4 @@
-package com.javid.sfp.util;
+package com.javid.sfp.util.validators;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
  * Created on 5/20/2022
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class Validator {
+public class Constant {
 
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static final class Pattern {
@@ -49,7 +49,7 @@ public class Validator {
         public static final String EMAIL_SIZE = EMAIL + SIZE_MIN_MAX;
         public static final String NULL_EMAIL = EMAIL + NOT_NULL;
 
-        public static final String INVALID_PASSWORD = "Password must be a combination of [upper, lower, special] chars and numbers no whitespaces";
+        public static final String INVALID_PASSWORD = "Password must contain (a-z,A-Z,0-9,[@,$,!,etc])";
         public static final String PASSWORD_SIZE = PASSWORD + SIZE_MIN_MAX;
         public static final String NULL_PASSWORD = PASSWORD + NOT_NULL;
 
