@@ -1,4 +1,6 @@
-package com.javid.sfp.util;
+package com.javid.sfp.util.constraints;
+
+import com.javid.sfp.util.validators.FileConstraintValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
