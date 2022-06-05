@@ -7,3 +7,25 @@
     outline: 0 none;
     box-shadow: 0 0;
 }
+
+.tooltip.bs-tooltip-top .tooltip-arrow::before {
+    border-top-color: red !important;
+}
+
+.tooltip.bs-tooltip-bottom .tooltip-arrow::before {
+    border-bottom-color: red !important;
+}
+
+.tooltip.bs-tooltip-start .tooltip-arrow::before {
+    border-left-color: red !important;
+}
+
+.tooltip.bs-tooltip-end .tooltip-arrow::before {
+    border-right-color: red !important;
+}
+
+.tooltip-inner {
+    background-color: red;
+    box-shadow: 0 0 4px black;
+    opacity: 1 !important;
+}
