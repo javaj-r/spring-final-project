@@ -1,9 +1,13 @@
 package com.javid.sfp.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 /**
  * @author javid
  * Created on 5/10/2022
  */
+@ResponseStatus(HttpStatus.NOT_FOUND)
 public class ResourceNotFoundException extends RuntimeException {
 
     public ResourceNotFoundException() {
