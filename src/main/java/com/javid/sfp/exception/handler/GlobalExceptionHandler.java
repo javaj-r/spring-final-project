@@ -2,69 +2,68 @@ package com.javid.sfp.exception.handler;
 
 import com.javid.sfp.exception.BadRequestException;
 import com.javid.sfp.exception.ResourceNotFoundException;
+import com.javid.sfp.exception.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.mail.MailException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author javid
  * Created on 5/10/2022
  */
 @Slf4j
-@RestControllerAdvice
+@ControllerAdvice(annotations = Controller.class, basePackages = "com.javid.sfp.controller")
 public class GlobalExceptionHandler {
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-
-        ex.getBindingResult()
-                .getAllErrors()
-                .forEach(
-                        error -> {
-                            String fieldName = ((FieldError) error).getField();
-                            String errorMessage = error.getDefaultMessage();
-                            errors.put(fieldName, errorMessage);
-                        });
-
-        return errors;
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public String handleException(ResourceNotFoundException ex, WebRequest request, Model model) {
+        return errorForm(ex, model, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value = ResourceNotFoundException.class)
-    public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
-        var body = "{ \"status_code\": 404, \"error\" : \"Resource Not Found\"";
-        body = body.concat(ex.getMessage() == null ? " }" : ", \"message\":\"".concat(ex.getMessage()).concat("\" }"));
-        var headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        return new ResponseEntity<>(body, headers, HttpStatus.NOT_FOUND);
+    @ExceptionHandler(BadRequestException.class)
+    public String handleBadRequestException(BadRequestException ex, WebRequest request, Model model) {
+        return errorForm(ex, model, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value = BadRequestException.class)
-    public ResponseEntity<Object> handleBadRequestException(ResourceNotFoundException ex, WebRequest request) {
-        var body = "{ \"status_code\": 400, \"error\" : \"Resource Not Found\"";
-        body = body.concat(ex.getMessage() == null ? " }" : ", \"message\":\"".concat(ex.getMessage()).concat("\" }"));
-        var headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        return new ResponseEntity<>(body, headers, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(UnauthorizedException.class)
+    public String handleUnauthorizedException(UnauthorizedException ex, WebRequest request, Model model) {
+        return errorForm(ex, model, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(value = RuntimeException.class)
-    public ResponseEntity<Object> handleRuntimeException(Exception ex, WebRequest request) {
+    @ResponseStatus(HttpStatus.BAD_GATEWAY)
+    @ExceptionHandler(MailException.class)
+    public String handleMailException(RuntimeException ex, WebRequest request, Model model) {
+        log.error(ex.getMessage());
+        return errorForm(new RuntimeException("Sending email failed"), model, HttpStatus.BAD_GATEWAY);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Object> handleRuntimeException(RuntimeException ex, WebRequest request) {
         log.error("RuntimeException ", ex);
         return ResponseEntity.ok(null);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleException(Exception ex, WebRequest request) {
+        log.error("Exception ", ex);
+        return ResponseEntity.ok(null);
+    }
+
+    private String errorForm(Exception ex, Model model, HttpStatus httpStatus) {
+        log.warn(httpStatus + ": " + ex.getMessage());
+        model.addAttribute("status", "Error " + httpStatus);
+        return errorForm(ex, model);
+    }
+
+    private String errorForm(Exception ex, Model model) {
+        model.addAttribute("message", ex.getMessage());
+        return "error/form";
     }
 }
