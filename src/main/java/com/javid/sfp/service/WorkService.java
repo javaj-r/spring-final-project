@@ -1,6 +1,6 @@
 package com.javid.sfp.service;
 
-import com.javid.sfp.dto.WorkDto;
+import com.javid.sfp.model.Work;
 
 import java.util.List;
 
@@ -10,5 +10,15 @@ import java.util.List;
  */
 public interface WorkService {
 
-    List<WorkDto> findAllByWorkgroupId(Long id);
+    List<Work> findAllByWorkgroupId(Long id);
+
+    List<Work> findAll();
+
+    Work findById(Long id);
+
+    Work create(Work work, Long workgroupId);
+
+    void update(Work work);
+
+    void delete(Long id);
 }
