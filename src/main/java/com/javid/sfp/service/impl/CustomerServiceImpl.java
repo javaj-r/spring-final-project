@@ -1,19 +1,21 @@
 package com.javid.sfp.service.impl;
 
 import com.javid.sfp.dto.CustomerDto;
+import com.javid.sfp.exception.BadRequestException;
 import com.javid.sfp.exception.ResourceNotFoundException;
 import com.javid.sfp.mapper.CustomerMapper;
 import com.javid.sfp.model.Customer;
 import com.javid.sfp.repository.CustomerRepository;
 import com.javid.sfp.repository.specification.SearchCriteria;
 import com.javid.sfp.repository.specification.UserSpecification;
+import com.javid.sfp.security.Role;
 import com.javid.sfp.service.CustomerService;
+import com.javid.sfp.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author javid
@@ -26,15 +28,18 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final UserService userService;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper, UserService userService) {
         this.customerRepository = customerRepository;
         this.customerMapper = customerMapper;
+        this.userService = userService;
     }
 
     @Override
-    public CustomerDto findByID(Long id) {
-        return null;
+    public Customer findByID(Long id) {
+        return customerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found!"));
     }
 
     @Override
@@ -45,16 +50,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDto save(CustomerDto customerDto) {
-        return save(customerDto, null);
-    }
-
-    @Override
-    public CustomerDto save(CustomerDto customerDto, Long id) {
-        var admin = customerMapper.mapToEntity(customerDto);
-        admin.setId(id);
-
-        return customerMapper.mapToDto(customerRepository.save(admin));
+    public Customer create(Customer customer) {
+        if (userService.existsByEmail(customer.getEmail())) {
+            throw new BadRequestException("Email already exists");
+        }
+        customer.getRoles().add(Role.CUSTOMER);
+        userService.encodePassword(customer);
+        return customerRepository.save(customer);
     }
 
     @Override
@@ -63,14 +65,17 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDto saveOrUpdate(CustomerDto customerDto) {
-        log.debug("CustomerServiceImpl: saveOrUpdate");
-
-        var customer = customerMapper.mapToEntity(customerDto);
-        var savedCustomer = customer != null ? customerRepository.save(customer) : null;
-        log.debug(savedCustomer != null ? "Saved Customer: " + savedCustomer.getId() : "Saved Customer is null!");
-
-        return customerMapper.mapToDto(savedCustomer);
+    public void update(Customer customer) {
+        var optional = customerRepository.findById(customer.getId());
+        if (optional.isPresent()) {
+            var fetched = optional.get();
+            var email = customer.getEmail();
+            if (!fetched.getEmail().equals(email) && userService.existsByEmail(email)) {
+                throw new BadRequestException("Email already exists");
+            }
+            userService.encodePassword(customer);
+            customerRepository.save(customer);
+        }
     }
 
     @Override
@@ -90,11 +95,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<CustomerDto> findAll() {
-        return customerRepository
-                .findAll()
-                .stream()
-                .map(customerMapper::mapToDto)
-                .collect(Collectors.toList());
+    public List<Customer> findAll() {
+        return customerRepository.findAll();
+    }
+
+    @Override
+    public Customer findByEmail(String email) {
+        return customerRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer not found!"));
     }
 }

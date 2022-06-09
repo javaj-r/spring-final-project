@@ -1,6 +1,7 @@
 package com.javid.sfp.service;
 
 import com.javid.sfp.dto.CustomerDto;
+import com.javid.sfp.model.Customer;
 
 import java.util.List;
 
@@ -10,19 +11,19 @@ import java.util.List;
  */
 public interface CustomerService {
 
-    CustomerDto findByID(Long id);
+    Customer findByID(Long id);
 
     CustomerDto findByEmailAndPassword(String email, String password);
 
-    CustomerDto save(CustomerDto customerDto);
-
-    CustomerDto save(CustomerDto customerDto, Long id);
+    Customer create(Customer customer);
 
     void deleteByID(Long id);
 
-    CustomerDto saveOrUpdate(CustomerDto customerDto);
+    void update(Customer customer);
 
     List<CustomerDto> findAllByNameAndEmail(CustomerDto customerDto);
 
-    List<CustomerDto> findAll();
+    List<Customer> findAll();
+
+    Customer findByEmail(String email);
 }
