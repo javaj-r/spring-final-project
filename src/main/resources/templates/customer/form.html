@@ -8,127 +8,135 @@
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
           th:href="@{/webjars/bootstrap/5.1.3/css/bootstrap.min.css}">
     <link rel="stylesheet" href="/static/css/mdi.css" th:href="@{/css/mdi.css}">
-
     <link rel="stylesheet" href="/static/css/form.css" th:href="@{/css/form.css}">
 </head>
+
 <body class="bg-secondary">
+<div id="wrapper">
+    <div id="page-content-wrapper">
 
-<div class="container-fluid mt-3 mb-3">
-    <div class="row">
-        <div class="col-lg-6 offset-lg-3 mx-auto my-auto">
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark text-light sticky-top">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link" aria-current="page" href="#" th:href="@{/}">
+                            <i class="mdi mdi-home mdi-18px"></i> Home
+                        </a>
 
-            <!-- /*@thymeleaf id="customer" type="com.javid.spring.last.project.phase3.dto.CustomerDto"*/ -->
-            <form method="post"
-                  th:object="${customer}"
-                  th:action="@{/customer/register}"
-                  th:with="validated = ${#fields.hasErrors()}, hasId = ${customer.id ne null}">
-
-                <div th:if="${#fields.hasErrors()}" class="alert alert-danger">
-                    <p>Please Correct Errors Below</p>
-                </div>
-
-                <input type="hidden" th:field="*{id}">
-
-                <div class="card align-content-center border-0">
-                    <div class="card-header bg-dark text-light">
-                        <h3 class="card-title h3" th:text="${hasId} ? 'Customer Update' : 'Customer Register'">Customer</h3>
-                    </div>
-                    <div class="card-body">
-
-                        <div class="row mx-auto" th:with="hasErr = ${#fields.hasErrors('firstname')}">
-                            <div class="input-group px-2 py-2 rounded-pill shadow-sm bg-white mb-3">
-                                <input type="text" id="firstname" class="form-control border-0 me-2"
-                                       placeholder="Firstname" th:field="*{firstname}">
-                                <i th:if="${validated}" th:class="${hasErr} ? #{in.err} : #{in.fin}"></i>
-                            </div>
-                            <small th:if="${hasErr}">
-                                <ul class="text-danger text-sm-start">
-                                    <li th:each="err : ${#fields.errors('firstname')}"
-                                        th:text="${err}">error
-                                    </li>
-                                </ul>
-                            </small>
+                        <div class="nav-item dropdown">
+                            <a class="nav-link" aria-current="page" href="#" th:href="@{/login}">
+                                <i class="mdi mdi-login mdi-18px"></i> Login
+                            </a>
                         </div>
 
-                        <div class="row mx-auto" th:with="hasErr = ${#fields.hasErrors('lastname')}">
-                            <div class="input-group px-2 py-2 rounded-pill shadow-sm bg-white mb-3">
-                                <input class="form-control border-0 me-2" type="text" id="lastname"
-                                       placeholder="Lastname" th:field="*{lastname}">
-                                <i th:if="${validated}" th:class="${hasErr} ? #{in.err} : #{in.fin}"></i>
+                        <div class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownRegister"
+                               role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="mdi mdi-file-sign mdi-18px"></i> Register
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                                <a class="dropdown-item" href="#" th:href="@{/expert/register}">Expert</a>
+                                <a class="dropdown-item active" href="#" th:href="@{/customer/register}">Customer</a>
                             </div>
-                            <small th:if="${hasErr}">
-                                <ul class="text-danger text-sm-start">
-                                    <li th:each="err : ${#fields.errors('lastname')}"
-                                        th:text="${err}">error
-                                    </li>
-                                </ul>
-                            </small>
                         </div>
 
-                        <div class="row mx-auto" th:with="hasErr = ${#fields.hasErrors('email')}">
-                            <div class="input-group px-2 py-2 rounded-pill shadow-sm bg-white mb-3">
-                                <input class="form-control border-0 me-2" type="email" id="email"
-                                       placeholder="Email" th:field="*{email}">
-                                <i th:if="${validated}" th:class="${hasErr} ? #{in.err} : #{in.fin}"></i>
-                            </div>
-                            <small th:if="${hasErr}">
-                                <ul class="text-danger text-sm-start">
-                                    <li th:each="err : ${#fields.errors('email')}"
-                                        th:text="${err}">error
-                                    </li>
-                                </ul>
-                            </small>
-                        </div>
-
-                        <div class="row mx-auto" th:with="hasErr = ${#fields.hasErrors('password')}">
-                            <div class="input-group px-2 py-2 rounded-pill shadow-sm bg-white mb-3">
-                                <input class="form-control border-0 me-2" type="text" id="password"
-                                       placeholder="Password" th:field="*{password}">
-                                <i th:if="${validated}" th:class="${hasErr} ? #{in.err} : #{in.fin}"></i>
-                            </div>
-                            <small th:if="${hasErr}">
-                                <ul class="text-danger text-sm-start">
-                                    <li th:each="err : ${#fields.errors('password')}"
-                                        th:text="${err}">error
-                                    </li>
-                                </ul>
-                            </small>
-                        </div>
-
-                        <div class="row mx-auto" th:with="hasErr = ${#fields.hasErrors('credit')}">
-                            <div class="input-group px-2 py-2 rounded-pill shadow-sm bg-white mb-3">
-                                <input class="form-control border-0 me-2" type="number" id="credit"
-                                       placeholder="Credit" step=".01" th:field="*{credit}">
-                                <i th:if="${validated}" th:class="${hasErr} ? #{in.err} : #{in.fin}"></i>
-                            </div>
-                            <small th:if="${hasErr}">
-                                <ul class="text-danger text-sm-start">
-                                    <li th:each="err : ${#fields.errors('credit')}"
-                                        th:text="${err}">error
-                                    </li>
-                                </ul>
-                            </small>
-                        </div>
-
-                        <div class="row col-lg-4 mx-auto">
-                            <div class="input-group px-2 py-1 rounded-pill shadow-sm bg-dark">
-                                <input class="form-control border-0 me-2 text-white  bg-dark" type="submit" id="submit">
-                            </div>
-                        </div>
                     </div>
                 </div>
+            </div>
+        </nav>
+        <div class="container-fluid mt-3 mb-3">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-3 mx-auto my-auto">
 
-            </form>
+                    <div class="card align-content-center border-0">
+                        <div class="card-header bg-dark text-light">
+                            <h3 class="card-title h3">Customer Register</h3>
+                        </div>
+                        <div class="card-body">
 
+                            <form enctype="multipart/form-data" method="post" id="customer-form">
+
+                                <div class="row mx-auto mb-3">
+                                    <label>
+                                        <input type="text" id="firstname" name="firstname"
+                                               class="form-control px-2 py-2 rounded-pill shadow-sm bg-white"
+                                               placeholder="Firstname">
+                                    </label>
+                                </div>
+
+                                <div class="row mx-auto mb-3">
+                                    <label>
+                                        <input class="form-control px-2 py-2 rounded-pill shadow-sm bg-white"
+                                               data-bs-placement="right"
+                                               type="text" name="lastname"
+                                               id="lastname" placeholder="Lastname">
+                                    </label>
+                                </div>
+
+                                <div class="row mx-auto mb-3">
+                                    <label>
+                                        <input class="form-control px-2 py-2 rounded-pill shadow-sm bg-white"
+                                               data-bs-placement="right"
+                                               type="email" id="email" name="email"
+                                               placeholder="Email">
+                                    </label>
+                                </div>
+
+                                <div class="row mx-auto mb-3">
+                                    <label>
+                                        <input class="form-control px-2 py-2 rounded-pill shadow-sm bg-white"
+                                               type="password"
+                                               data-bs-placement="right"
+                                               id="password" name="password"
+                                               placeholder="Password">
+                                    </label>
+                                </div>
+
+                                <div class="row mx-auto mb-3">
+                                    <label>
+                                        <input class="form-control px-2 py-2 rounded-pill shadow-sm bg-white"
+                                               type="password"
+                                               data-bs-placement="right"
+                                               id="matchingPassword" name="matchingPassword"
+                                               placeholder="Confirm Password">
+                                    </label>
+                                </div>
+
+                                <div class="row col-6 mx-auto">
+                                    <input class="mb-3 border-0 px-2 py-2 rounded-pill shadow-sm bg-dark text-white"
+                                           type="reset">
+                                </div>
+                            </form>
+
+                            <div class="row col-6 mx-auto">
+                                <button class="mb-3 border-0 px-2 py-2 rounded-pill shadow-sm bg-dark text-white"
+                                        name="submit"
+                                        id="submit" onclick="submitForm('customer-form', '/api/v1/customer', 'POST')">OK
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<script src="webjars/jquery/3.6.0/jquery.min.js"></script>
-
+<script th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
+<script th:src="@{/webjars/jquery-ui/1.13.1/jquery-ui.js}"></script>
 <script crossorigin="anonymous"
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         th:src="@{/webjars/bootstrap/5.1.3/js/bootstrap.bundle.min.js}"></script>
+<script src="/static/js/ajax.js" th:src="@{/js/ajax.js}"></script>
 
 </body>
 </html>
