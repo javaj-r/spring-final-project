@@ -1,6 +1,7 @@
 package com.javid.sfp.controller;
 
 import com.javid.sfp.dto.ExpertDto;
+import com.javid.sfp.mapper.ExpertMapper;
 import com.javid.sfp.model.enums.UserStatus;
 import com.javid.sfp.service.ExpertService;
 import com.javid.sfp.service.UserService;
@@ -34,12 +35,21 @@ public class ExpertController {
     public static final String EXPERT_FORM = "expert/form";
     private final ExpertService expertService;
     private final UserService userService;
+    private final ExpertMapper expertMapper;
 
-    public ExpertController(ExpertService expertService, UserService userService) {
+    public ExpertController(ExpertService expertService, UserService userService, ExpertMapper expertMapper) {
         this.expertService = expertService;
         this.userService = userService;
+        this.expertMapper = expertMapper;
     }
 
+    /**
+     * Deprecated: no need to binding model since using ajax
+     *
+     * @param model {@link Model}
+     * @return expert/form page
+     */
+    @Deprecated(since = "1.0", forRemoval = true)
     @GetMapping("register")
     public String getRegisterPage(Model model) {
         model.addAttribute(ExpertController.EXPERT, new ExpertDto());
@@ -47,6 +57,14 @@ public class ExpertController {
         return EXPERT_FORM;
     }
 
+    /**
+     * Deprecated: now using /api/v1/expert rest version
+     *
+     * @param expert {@link ExpertDto} ExpertDto to register
+     * @param result {@link BindingResult} Log and return field errors
+     * @return If success redirects to index page else expert/form page with BindingResult
+     */
+    @Deprecated(since = "1.0", forRemoval = true)
     @PostMapping(value = "register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public String register(@Validated(AdvanceInfo.class) @ModelAttribute(name = EXPERT) ExpertDto expert, BindingResult result) {
         if (result.hasErrors()) {
@@ -82,6 +100,10 @@ public class ExpertController {
         return "redirect:/index";
     }
 
+    /**
+     * @param model {@link Model}
+     * @return expert/search page
+     */
     @GetMapping("search")
     public String initSearchForm(Model model) {
         model.addAttribute(EXPERT, new ExpertDto());
@@ -91,8 +113,10 @@ public class ExpertController {
     }
 
     @PostMapping("search")
-    public ModelAndView processSearchForm(@ModelAttribute ExpertDto expert) {
-        var experts = expertService.findAllByCondition(expert);
+    public ModelAndView processSearchForm(@ModelAttribute ExpertDto expertDto) {
+        var expert = expertMapper.mapToEntity(expertDto);
+
+        var experts = expertService.findAllByCondition(expert, expertDto.getEnrolledWorkName());
 
         var modelView = new ModelAndView("expert/search");
         modelView.addObject(EXPERT, expert);
