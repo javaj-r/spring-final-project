@@ -1,20 +1,23 @@
 package com.javid.sfp.service.impl;
 
 import com.javid.sfp.dto.ExpertDto;
+import com.javid.sfp.exception.BadRequestException;
 import com.javid.sfp.exception.ResourceNotFoundException;
 import com.javid.sfp.mapper.ExpertMapper;
-import com.javid.sfp.model.CustomerOrder;
+import com.javid.sfp.model.Expert;
+import com.javid.sfp.model.Work;
 import com.javid.sfp.repository.ExpertRepository;
 import com.javid.sfp.repository.specification.ExpertSpecification;
 import com.javid.sfp.repository.specification.SearchCriteria;
+import com.javid.sfp.security.Role;
 import com.javid.sfp.service.ExpertService;
+import com.javid.sfp.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author javid
@@ -27,10 +30,12 @@ public class ExpertServiceImpl implements ExpertService {
 
     private final ExpertRepository expertRepository;
     private final ExpertMapper expertMapper;
+    private final UserService userService;
 
-    public ExpertServiceImpl(ExpertRepository expertRepository, ExpertMapper expertMapper) {
+    public ExpertServiceImpl(ExpertRepository expertRepository, ExpertMapper expertMapper, UserService userService) {
         this.expertRepository = expertRepository;
         this.expertMapper = expertMapper;
+        this.userService = userService;
     }
 
     @Override
@@ -48,11 +53,22 @@ public class ExpertServiceImpl implements ExpertService {
     }
 
     @Override
+    public Expert create(Expert expert) {
+        if (userService.existsByEmail(expert.getEmail())) {
+            throw new BadRequestException("Email already exists");
+        }
+        expert.getRoles().add(Role.EXPERT);
+        userService.encodePassword(expert);
+        return expertRepository.save(expert);
+    }
+
+    @Override
     public ExpertDto saveOrUpdate(ExpertDto expertDto) {
         log.debug("RecipeServiceImpl: saveRecipeCommand");
 
         var expert = expertMapper.mapToEntity(expertDto);
         var savedExpert = expert != null ? expertRepository.save(expert) : null;
+        userService.encodePassword(expert);
         log.debug(savedExpert != null ? "Saved Expert: " + savedExpert.getId() : "Saved Expert is null!");
 
         return expertMapper.mapToDto(savedExpert);
@@ -69,34 +85,54 @@ public class ExpertServiceImpl implements ExpertService {
     }
 
     @Override
-    public List<ExpertDto> findAllByCondition(ExpertDto expertDto) {
-        var firstname = expertDto.getFirstname() == null ? "" : expertDto.getFirstname();
-        var lastname = expertDto.getLastname() == null ? "" : expertDto.getLastname();
-        var email = expertDto.getEmail() == null ? "" : expertDto.getEmail();
-        var workName = expertDto.getEnrolledWorkName() == null ? "" : expertDto.getEnrolledWorkName();
+    public List<Expert> findAllByCondition(Expert expert, String enrolledWorkName) {
+        var firstname = expert.getFirstname() == null ? "" : expert.getFirstname();
+        var lastname = expert.getLastname() == null ? "" : expert.getLastname();
+        var email = expert.getEmail() == null ? "" : expert.getEmail();
+        var workName = enrolledWorkName == null ? "" : enrolledWorkName;
+
         var criteria = SearchCriteria.builder()
                 .firstname(firstname)
                 .lastname(lastname)
                 .email(email)
                 .workName(workName)
+                .score(expert.getScore())
                 .build();
+
         var spec = new ExpertSpecification(criteria);
 
-        return new HashSet<>(expertRepository.findAll(spec))
-                .parallelStream()
-                .map(expert -> {
-                            var score = expert
-                                    .getOrders()
-                                    .parallelStream()
-                                    .map(CustomerOrder::getWorkScore)
-                                    .mapToDouble(Byte::doubleValue)
-                                    .average()
-                                    .orElse(0.0);
+        return expertRepository.findAll(spec);
+    }
 
-                            return expertMapper
-                                    .mapToDto(expert)
-                                    .setScore(score);
-                        }
-                ).collect(Collectors.toList());
+    @Override
+    public List<Expert> findAll() {
+        return expertRepository.findAll();
+    }
+
+    @Override
+    public Expert findById(Long id) {
+        return expertRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Expert not found!"));
+    }
+
+    @Override
+    public void update(Expert expert) {
+        var optional = expertRepository.findById(expert.getId());
+        if (optional.isPresent()) {
+            var fetched = optional.get();
+            var email = expert.getEmail();
+            if (!fetched.getEmail().equalsIgnoreCase(email) && userService.existsByEmail(email)) {
+                throw new BadRequestException("Email already exists");
+            }
+            userService.encodePassword(expert);
+            expertRepository.save(expert);
+        }
+    }
+
+    @Override
+    public List<Work> findExpertEnrolledWorks(Long expertId) {
+        return new ArrayList<>(expertRepository.findById(expertId)
+                .orElseThrow(() -> new ResourceNotFoundException("Expert not found!"))
+                .getEnrolledWorks());
     }
 }
