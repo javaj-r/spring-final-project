@@ -28,12 +28,12 @@ public abstract class BaseEntity<I extends Serializable> {
     private I id;
 
     @CreationTimestamp
-    @Column(name = "CREATED_DATE_TIME", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Timestamp createdDateTime;
+    @Column(name = "CREATE_TIME", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp createTime;
 
     @UpdateTimestamp
-    @Column(name = "UPDATED_DATE_TIME", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    private Timestamp updatedDateTime;
+    @Column(name = "UPDATE_TIME", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp updateTime;
 
     public boolean isNew() {
         return id == null;

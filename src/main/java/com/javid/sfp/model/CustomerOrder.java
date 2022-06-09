@@ -13,10 +13,11 @@ import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.javid.sfp.util.Validator.Message.*;
+import static com.javid.sfp.util.validators.Constant.Message.*;
 
 /**
  * @author javid
@@ -59,6 +60,10 @@ public class CustomerOrder extends BaseEntity<Long> {
     @Min(value = -10, message = SCORE_MIN)
     @Max(value = 10, message = SCORE_MAX)
     private Byte workScore;
+
+    private Timestamp startTime;
+
+    private Timestamp finishTime;
 
     @JsonBackReference(value = "Customer_Order")
     @ManyToOne

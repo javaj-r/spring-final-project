@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.sql.Time;
 
-import static com.javid.sfp.util.Validator.Message.*;
+import static com.javid.sfp.util.validators.Constant.Message.*;
 
 /**
  * @author javid

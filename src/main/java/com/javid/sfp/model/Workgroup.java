@@ -13,8 +13,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import static com.javid.sfp.util.Validator.Message.BLANK_NAME;
-import static com.javid.sfp.util.Validator.Message.NAME_SIZE;
+import static com.javid.sfp.util.validators.Constant.Message.BLANK_NAME;
+import static com.javid.sfp.util.validators.Constant.Message.NAME_SIZE;
 
 /**
  * @author javid

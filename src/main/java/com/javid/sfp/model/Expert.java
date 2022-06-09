@@ -15,8 +15,8 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.javid.sfp.util.Validator.Message.IMAGE_MAX_KB;
-import static com.javid.sfp.util.Validator.Message.NULL_IMAGE;
+import static com.javid.sfp.util.validators.Constant.Message.IMAGE_MAX_KB;
+import static com.javid.sfp.util.validators.Constant.Message.NULL_IMAGE;
 
 /**
  * @author javid
@@ -43,6 +43,9 @@ public class Expert extends User {
     @Digits(integer = 15, fraction = 2)
     @Column(name = "USER_CREDIT")
     private BigDecimal credit;
+
+    @Column(name = "SCORE")
+    private Double score;
 
     @JsonManagedReference(value = "Expert_Offer")
     @OneToMany(mappedBy = "expert", cascade = CascadeType.ALL, orphanRemoval = true)

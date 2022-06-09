@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.Set;
 
-import static com.javid.sfp.util.Validator.Message.*;
+import static com.javid.sfp.util.validators.Constant.Message.*;
 
 /**
  * @author javid

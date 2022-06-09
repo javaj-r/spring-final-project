@@ -28,4 +28,9 @@ public class ExpertOfferId implements Serializable {
 
     @Column(name = "CUSTOMER_ORDER_ID")
     private Long customerOrderId;
+
+    public ExpertOfferId(Long expertId, Long customerOrderId) {
+        this.expertId = expertId;
+        this.customerOrderId = customerOrderId;
+    }
 }
