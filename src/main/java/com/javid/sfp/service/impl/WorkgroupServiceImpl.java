@@ -1,8 +1,8 @@
 package com.javid.sfp.service.impl;
 
-import com.javid.sfp.dto.WorkgroupDto;
+import com.javid.sfp.exception.BadRequestException;
 import com.javid.sfp.exception.ResourceNotFoundException;
-import com.javid.sfp.mapper.WorkgroupMapper;
+import com.javid.sfp.model.Workgroup;
 import com.javid.sfp.repository.WorkgroupRepository;
 import com.javid.sfp.service.WorkgroupService;
 import org.springframework.stereotype.Service;
@@ -17,22 +17,43 @@ import java.util.List;
 public class WorkgroupServiceImpl implements WorkgroupService {
 
     private final WorkgroupRepository workgroupRepository;
-    private final WorkgroupMapper workgroupMapper;
 
-    public WorkgroupServiceImpl(WorkgroupRepository workgroupRepository, WorkgroupMapper workgroupMapper) {
+    public WorkgroupServiceImpl(WorkgroupRepository workgroupRepository) {
         this.workgroupRepository = workgroupRepository;
-        this.workgroupMapper = workgroupMapper;
     }
 
     @Override
-    public List<WorkgroupDto> findAll() {
-        return workgroupMapper.mapToDto(workgroupRepository.findAll());
+    public List<Workgroup> findAll() {
+        return workgroupRepository.findAll();
     }
 
     @Override
-    public WorkgroupDto findById(Long id) {
+    public Workgroup findById(Long id) {
         return workgroupRepository.findById(id)
-                .map(workgroupMapper::mapToDto)
                 .orElseThrow(() -> new ResourceNotFoundException("Workgroup not found!"));
+    }
+
+    @Override
+    public Workgroup create(String name) {
+        if (workgroupRepository.existsByName(name)) {
+            throw new BadRequestException("Workgroup " + name + " already exists!");
+        }
+
+        var workgroup = new Workgroup();
+        workgroup.setName(name);
+
+        return workgroupRepository.save(workgroup);
+    }
+
+    @Override
+    public void update(Workgroup workgroup) {
+        if (workgroupRepository.findById(workgroup.getId()).isPresent()) {
+            workgroupRepository.save(workgroup);
+        }
+    }
+
+    @Override
+    public void delete(Long id) {
+        workgroupRepository.deleteById(id);
     }
 }

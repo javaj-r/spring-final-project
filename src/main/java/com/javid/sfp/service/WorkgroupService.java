@@ -1,6 +1,6 @@
 package com.javid.sfp.service;
 
-import com.javid.sfp.dto.WorkgroupDto;
+import com.javid.sfp.model.Workgroup;
 
 import java.util.List;
 
@@ -10,7 +10,13 @@ import java.util.List;
  */
 public interface WorkgroupService {
 
-    List<WorkgroupDto> findAll();
+    List<Workgroup> findAll();
 
-    WorkgroupDto findById(Long id);
+    Workgroup findById(Long id);
+
+    Workgroup create(String name);
+
+    void update(Workgroup workgroup);
+
+    void delete(Long id);
 }
