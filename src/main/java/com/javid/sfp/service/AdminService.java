@@ -1,6 +1,6 @@
 package com.javid.sfp.service;
 
-import com.javid.sfp.dto.AdminDto;
+import com.javid.sfp.model.Admin;
 
 /**
  * @author javid
@@ -8,14 +8,13 @@ import com.javid.sfp.dto.AdminDto;
  */
 public interface AdminService {
 
-    AdminDto findByID(Long id);
-
-    AdminDto findByEmailAndPassword(String email, String password);
-
-    AdminDto save(AdminDto adminDto);
-
-    AdminDto save(AdminDto adminDto, Long id);
+    Admin findByID(Long id);
 
     void deleteByID(Long id);
 
+    Admin findByEmail(String email);
+
+    Admin creat(Admin admin);
+
+    void update(Admin admin);
 }
