@@ -22,19 +22,23 @@
                     <div class="row mb-4">
                         <h4 class="h4" th:text="${message} ?: (${status} ?: 'Unknown Error')">Error message</h4>
                     </div>
-                            <form th:action="${action ?: 'GET'}">
-                    <div class="row">
-                        <div class="col d-grid gap-2" th:if="${action}">
+                    <form th:action="${action ?: '/'}" th:method="${method ?: 'GET'}">
+                        <div class="row">
+                            <div id="hidden-inputs" th:if="${hiddenInputs}">
+                                <div th:each="inputKey : ${hiddenInputs.keySet()}">
+                                    <input type="hidden" th:name="${inputKey}" th:value="${hiddenInputs.get(inputKey)}">
+                                </div>
+                            </div>
+                            <div class="col d-grid gap-2" th:if="${action}">
                                 <button type="submit" class="btn btn-dark" name="submit"
                                         th:text="${submitTitle ?: 'OK'}">OK
                                 </button>
+                            </div>
+                            <div class="col d-grid gap-2">
+                                <a class="btn btn-dark" href="#" th:href="@{/}">Back to main</a>
+                            </div>
                         </div>
-                        <div class="col d-grid gap-2">
-                        <a class="btn btn-dark" href="#" th:href="@{/}">Back to main</a>
-
-                        </div>
-                    </div>
-                            </form>
+                    </form>
                 </div>
             </div>
         </div>
