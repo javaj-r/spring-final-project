@@ -41,15 +41,11 @@ public class UserSpecification<T extends User> implements Specification<T> {
 
         predicates.add(builder.and());
 
-        if (firstname == null) {
-            predicates.add(root.get(first).isNull());
-        } else {
+        if (firstname != null) {
             predicates.add(builder.like(root.get(first), PER + firstname + PER));
         }
 
-        if (lastname == null) {
-            predicates.add(root.get(last).isNull());
-        } else {
+        if (lastname != null) {
             predicates.add(builder.like(root.get(last), PER + lastname + PER));
         }
 
