@@ -1,5 +1,7 @@
 package com.javid.sfp.controller;
 
+import com.javid.sfp.mapper.WorkMapper;
+import com.javid.sfp.mapper.WorkgroupMapper;
 import com.javid.sfp.service.WorkService;
 import com.javid.sfp.service.WorkgroupService;
 import org.springframework.stereotype.Controller;
@@ -16,19 +18,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("workgroup")
 public class WorkgroupController {
 
-    private final WorkgroupService workgroupService1;
-    private final WorkService workgroupService;
+    private final WorkgroupService workgroupService;
+    private final WorkgroupMapper workgroupMapper;
+    private final WorkService workService;
+    private final WorkMapper workMapper;
 
-    public WorkgroupController(WorkgroupService workgroupService1, WorkService workgroupService) {
-        this.workgroupService1 = workgroupService1;
+    public WorkgroupController(WorkgroupService workgroupService, WorkgroupMapper workgroupMapper,
+                               WorkService workService, WorkMapper workMapper) {
         this.workgroupService = workgroupService;
+        this.workgroupMapper = workgroupMapper;
+        this.workService = workService;
+        this.workMapper = workMapper;
     }
 
     @GetMapping("{id}")
     public String getWorkgroupWorks(@PathVariable(name = "id") String id, Model model) {
         var workgroupId = Long.valueOf(id);
-        var workgroup = workgroupService1.findById(workgroupId);
-        var works = workgroupService.findAllByWorkgroupId(workgroupId);
+        var workgroup = workgroupMapper.mapToDto(workgroupService.findById(workgroupId));
+        var works = workMapper.mapToDto(workService.findAllByWorkgroupId(workgroupId));
 
         model.addAttribute("workgroup", workgroup);
         model.addAttribute("works", works);
