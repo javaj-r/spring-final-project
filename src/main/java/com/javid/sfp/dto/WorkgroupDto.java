@@ -9,8 +9,8 @@ import lombok.experimental.Accessors;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import static com.javid.sfp.util.Validator.Message.BLANK_NAME;
-import static com.javid.sfp.util.Validator.Message.NAME_SIZE;
+import static com.javid.sfp.util.validators.Constant.Message.BLANK_NAME;
+import static com.javid.sfp.util.validators.Constant.Message.NAME_SIZE;
 
 /**
  * @author javid

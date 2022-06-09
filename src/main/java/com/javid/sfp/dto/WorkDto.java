@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 
-import static com.javid.sfp.util.Validator.Message.*;
+import static com.javid.sfp.util.validators.Constant.Message.*;
 
 /**
  * @author javid

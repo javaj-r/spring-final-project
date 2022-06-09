@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.Time;
 
-import static com.javid.sfp.util.Validator.Message.*;
+import static com.javid.sfp.util.validators.Constant.Message.*;
 
 /**
  * @author javid
@@ -49,8 +49,10 @@ public class CustomerOrderDto extends BaseDto {
     @Max(value = 10, message = SCORE_MAX)
     private Byte workScore;
 
+    @NotNull
     private Long customerId;
 
+    @NotNull
     private Long workId;
 
     private Long selectedExpertId;

@@ -3,7 +3,7 @@ package com.javid.sfp.dto;
 import com.javid.sfp.dto.base.UserDto;
 import com.javid.sfp.model.enums.UserStatus;
 import com.javid.sfp.util.AdvanceInfo;
-import com.javid.sfp.util.ValidFile;
+import com.javid.sfp.util.constraints.ValidFile;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -14,8 +14,8 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-import static com.javid.sfp.util.Validator.Message.IMAGE_SIZE_TYPE;
-import static com.javid.sfp.util.Validator.Message.NULL_IMAGE;
+import static com.javid.sfp.util.validators.Constant.Message.IMAGE_SIZE_TYPE;
+import static com.javid.sfp.util.validators.Constant.Message.NULL_IMAGE;
 
 /**
  * @author javid

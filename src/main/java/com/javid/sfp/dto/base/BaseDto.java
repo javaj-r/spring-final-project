@@ -18,6 +18,6 @@ import java.sql.Timestamp;
 @Accessors(chain = true)
 public abstract class BaseDto {
 
-    private Timestamp createdDateTime;
-    private Timestamp updatedDateTime;
+    private Timestamp createTime;
+    private Timestamp updateTime;
 }
