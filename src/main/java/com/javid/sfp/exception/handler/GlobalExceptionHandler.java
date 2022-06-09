@@ -4,6 +4,8 @@ import com.javid.sfp.exception.BadRequestException;
 import com.javid.sfp.exception.ResourceNotFoundException;
 import com.javid.sfp.exception.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
@@ -19,11 +21,12 @@ import org.springframework.web.context.request.WebRequest;
  * Created on 5/10/2022
  */
 @Slf4j
+@Order(Ordered.HIGHEST_PRECEDENCE + 1)
 @ControllerAdvice(annotations = Controller.class, basePackages = "com.javid.sfp.controller")
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public String handleException(ResourceNotFoundException ex, WebRequest request, Model model) {
+    public String handleResourceNotFoundException(ResourceNotFoundException ex, WebRequest request, Model model) {
         return errorForm(ex, model, HttpStatus.NOT_FOUND);
     }
 
