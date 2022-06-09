@@ -15,4 +15,6 @@ public interface WorkRepository extends JpaRepository<Work, Long> {
     Optional<Work> findByName(String name);
 
     List<Work> findAllByWorkgroupId(Long id);
+
+    boolean existsByName(String name);
 }
