@@ -17,15 +17,24 @@ public class ExpertSpecification extends UserSpecification<Expert> {
 
     @Override
     public Predicate toPredicate(Root<Expert> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
-        if (criteria.getWorkName() == null || criteria.getWorkName().isBlank())
-            return super.toPredicate(root, query, builder);
-
         var workName = criteria.getWorkName();
+        var score = criteria.getScore();
 
-        Join<Expert, Work> join = root.join("enrolledWorks", JoinType.INNER);
+        Join<Expert, Work> join = null;
+
+        if (workName != null && workName.isBlank()) {
+             join = root.join("enrolledWorks", JoinType.INNER);
+        }
 
         var predicates = toUserPredicates(root, builder);
-        predicates.add(builder.like(join.get("name").as(String.class), PER + workName + PER));
+
+        if (join != null) {
+            predicates.add(builder.like(join.get("name").as(String.class), PER + workName + PER));
+        }
+
+        if (score != null) {
+            predicates.add(builder.between(root.get("score"), score - 0.5, score + 0.5));
+        }
 
         return builder.and(predicates.toArray(Predicate[]::new));
     }
