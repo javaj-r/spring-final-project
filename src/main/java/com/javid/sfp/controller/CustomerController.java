@@ -1,10 +1,13 @@
 package com.javid.sfp.controller;
 
 import com.javid.sfp.dto.CustomerDto;
+import com.javid.sfp.mapper.CustomerMapper;
 import com.javid.sfp.service.CustomerService;
 import com.javid.sfp.service.UserService;
 import com.javid.sfp.util.AdvanceInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,10 +32,12 @@ public class CustomerController {
     public static final String CUSTOMER_FORM = "customer/form";
     private final CustomerService customerService;
     private final UserService userService;
+    private final CustomerMapper customerMapper;
 
-    public CustomerController(CustomerService customerService, UserService userService) {
+    public CustomerController(CustomerService customerService, UserService userService, CustomerMapper customerMapper) {
         this.customerService = customerService;
         this.userService = userService;
+        this.customerMapper = customerMapper;
     }
 
     @GetMapping("register")
@@ -56,7 +61,7 @@ public class CustomerController {
             log.debug("Duplicate email: " + customer.getEmail());
             return CUSTOMER_FORM;
         }
-        customerService.saveOrUpdate(customer);
+        customerService.create(customerMapper.mapToEntity(customer));
 
         return "redirect:/index";
     }
@@ -79,4 +84,16 @@ public class CustomerController {
 
         return view;
     }
+
+    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
+    @GetMapping("profile")
+    public String initProfilePage(Authentication user, Model model) {
+        var customer = customerService.findByEmail(user.getName());
+        var customerDto = customerMapper.mapToDto(customer);
+
+        model.addAttribute("customer", customerDto);
+
+        return "customer/profile";
+    }
+
 }
