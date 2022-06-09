@@ -1,5 +1,7 @@
 package com.javid.sfp.service;
 
+import com.javid.sfp.model.base.User;
+
 /**
  * @author javid
  * Created on 5/24/2022
@@ -7,4 +9,8 @@ package com.javid.sfp.service;
 public interface UserService {
 
     boolean existsByEmail(String email);
+
+    void update(User user);
+
+    void encodePassword(User user);
 }
