@@ -14,7 +14,13 @@ public interface CustomerOrderService {
 
     List<CustomerOrder> findAllByCustomerId(Long customerId);
 
+    List<CustomerOrder> findAllByExpertId(Long expertId);
+
+    List<CustomerOrder> findAllAvailableByWorks(Long expertId);
+
     CustomerOrder findById(Long id);
+
+    CustomerOrder findByIdAndCustomerId(Long id, Long customerId);
 
     CustomerOrder save(CustomerOrder customerOrder);
 
@@ -23,4 +29,6 @@ public interface CustomerOrderService {
     void deleteByID(Long id);
 
     CustomerOrder save(Long customerId, Long workId, CustomerOrder order);
+
+    CustomerOrder create(CustomerOrder customerOrder);
 }
