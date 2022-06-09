@@ -25,7 +25,8 @@ public class ExpertOfferServiceImpl implements ExpertOfferService {
     private final CustomerOrderRepository orderRepository;
 
 
-    public ExpertOfferServiceImpl(ExpertOfferRepository offerRepository, ExpertRepository expertRepository, CustomerOrderRepository orderRepository) {
+    public ExpertOfferServiceImpl(ExpertOfferRepository offerRepository, ExpertRepository expertRepository
+            , CustomerOrderRepository orderRepository) {
         this.offerRepository = offerRepository;
         this.expertRepository = expertRepository;
         this.orderRepository = orderRepository;
@@ -59,8 +60,8 @@ public class ExpertOfferServiceImpl implements ExpertOfferService {
     }
 
     @Override
-    public List<ExpertOffer> findAllByOrderId(Long workId) {
-        return offerRepository.findAllByOrderId(workId);
+    public List<ExpertOffer> findAllByOrderId(Long orderId) {
+        return offerRepository.findAllByOrderId(orderId);
     }
 
     @Override
@@ -79,5 +80,16 @@ public class ExpertOfferServiceImpl implements ExpertOfferService {
         expertOffer.setExpert(expert);
         expertOffer.setOrder(order);
         return offerRepository.save(expertOffer);
+    }
+
+    @Override
+    public List<ExpertOffer> findAll() {
+        return offerRepository.findAll();
+    }
+
+    @Override
+    public ExpertOffer findById(ExpertOfferId id) {
+        return offerRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Offer not found!"));
     }
 }
