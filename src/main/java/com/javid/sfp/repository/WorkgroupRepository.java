@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface WorkgroupRepository extends JpaRepository<Workgroup, Long> {
 
     Optional<Workgroup> findByName(String name);
+
+    boolean existsByName(String name);
 }
