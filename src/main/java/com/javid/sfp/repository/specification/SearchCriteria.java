@@ -16,4 +16,5 @@ public class SearchCriteria {
     private String firstname;
     private String lastname;
     private String workName;
+    private Double score;
 }
