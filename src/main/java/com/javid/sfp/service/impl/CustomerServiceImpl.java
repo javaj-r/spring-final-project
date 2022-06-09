@@ -73,7 +73,7 @@ public class CustomerServiceImpl implements CustomerService {
             if (!fetched.getEmail().equals(email) && userService.existsByEmail(email)) {
                 throw new BadRequestException("Email already exists");
             }
-            userService.encodePassword(customer);
+            customer.setPassword(fetched.getPassword());
             customerRepository.save(customer);
         }
     }

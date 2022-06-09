@@ -66,7 +66,7 @@ public class AdminServiceImpl implements AdminService {
             if (!fetched.getEmail().equalsIgnoreCase(email) && userService.existsByEmail(email)) {
                 throw new BadRequestException("Email already exists");
             }
-            userService.encodePassword(admin);
+            admin.setPassword(fetched.getPassword());
             adminRepository.save(admin);
         }
     }

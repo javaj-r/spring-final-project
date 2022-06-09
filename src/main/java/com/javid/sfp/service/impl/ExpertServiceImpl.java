@@ -124,7 +124,7 @@ public class ExpertServiceImpl implements ExpertService {
             if (!fetched.getEmail().equalsIgnoreCase(email) && userService.existsByEmail(email)) {
                 throw new BadRequestException("Email already exists");
             }
-            userService.encodePassword(expert);
+            expert.setPassword(fetched.getPassword());
             expertRepository.save(expert);
         }
     }
